@@ -3,7 +3,7 @@
 
 const segmentor = require('./segmentor.js');
 const plotter = require('./plotter.js');
-const AnalyzerWorklet_link = 'https://unpkg.com/formantanalyzer@1.1.6/analyzernode.min.js';
+const AnalyzerWorklet_link = 'https://unpkg.com/formantanalyzer@1.1.8/analyzernode.min.js';
 //AudioWorklet module responsible for FFT and Mel Spectrum calculations in realtime, it is the heaviest process as it has many 'for loops' for each frame.
 
 //Generalized function for AudioContext in new and old browser

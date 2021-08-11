@@ -4,6 +4,7 @@ cache/
 notes.txt
 *.csv
 data_*.json
+server.bat
 
 *.code-workspace
 server.bat

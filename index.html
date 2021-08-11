@@ -37,21 +37,36 @@
 
 
         <div class="w3-row w3-center w3-padding-small">     <!-- Buttons -->
+            
+            <div class="w3-col m6">
+                <div id="dropZone" class="w3-card-4">
+                        <label for="filesx" class="w3-hover-text-amber">Load Audio: </label>
+                        <input type="file" id="filesx" name="filesx[]" onchange="readmultifiles(this.files)" multiple="" class="w3-button w3-hover-border-khaki w3-padding" placeholder="Audio files" accept="audio/*" />
+                        <input type="button" id="play_button" value="Play" class="w3-button w3-wide w3-border w3-border-light-blue w3-padding">
+                </div>
+            </div>
 
- 
-            <input type="button" id="mic_button" value="Mic" class="w3-button w3-wide w3-border w3-border-amber w3-padding">
+            <div class="w3-col m2">
+                <input type="button" id="mic_button" value="Mic" class="w3-button w3-wide w3-border w3-border-amber w3-padding">
+            </div>
             
-            
+            <div class="w3-col m4">
+                <select class="w3-select w3-dark-input" id="output_level" style="width:95%">
+                    <option value="1">Bars</option>
+                    <option value="2" selected>Spectrum</option>
+                    <option value="3">Segments</option>
+                    <option value="4">Segment Formants</option>
+                    <option value="5">Segment Features [ML]</option>
+                    <option value="10">Syllable Formants </option>
+                    <option value="11">Distributions 264x [ML]</option>
+                    <option value="12">Syllable Curves 23x [ML]</option>
+                    <option value="13">Syllable 53x [ML]</option>
+                </select>
+            </div>
         </div>
         
         <div class="w3-row w3-center w3-padding-small"> <!-- File loading zone -->
-            <div id="dropZone" class="w3-card-4">
-                <p>
-                    <label for="filesx" class="w3-hover-text-amber">Load Audio: </label>
-                    <input type="file" id="filesx" name="filesx[]" onchange="readmultifiles(this.files)" multiple="" class="w3-button w3-hover-border-khaki w3-padding" placeholder="Audio files" accept="audio/*" />
-                    <input type="button" id="play_button" value="Play" class="w3-button w3-wide w3-border w3-border-light-blue w3-padding">
-                </p>
-            </div>
+            
         </div>
         
         
@@ -71,12 +86,12 @@
 
 
     <div class="footer">
-        <a href="https://github.com/tabahi/formantanalyzer.js/blob/main/demo/index.html">
+        <a href="https://github.com/tabahi/formantanalyzer.js/blob/main/index.html">
             <span>Formant Analyzer bare minium starter file</span>
           </a>
     </div>
     
-    <script src="https://unpkg.com/formantanalyzer/index.js"></script>
+    <script src="https://unpkg.com/formantanalyzer@1.1.8/index.js"></script>
 
     
     <script>
@@ -93,7 +108,7 @@
         
         let launch_config = { plot_enable: true,
         spec_type: 1,
-        output_level: 2,
+        output_level: document.getElementById('output_level').value,
         plot_len: 200,
         f_min: 50,
         f_max: 4000,
@@ -102,8 +117,8 @@
         window_width: 25,
         window_step: 15,
         pause_length: 200,
-        min_seg_length: 50,
-        auto_noise_gate: false,
+        min_seg_length: 500,
+        auto_noise_gate: true,
         voiced_min_dB: 10,
         voiced_max_dB: 100,
         plot_lag: 1,
@@ -116,10 +131,13 @@
         FormantAnalyzer.configure(launch_config);
     }
 
+   
+
     /*This function is called asynchronously after each segment or syllable depending on the output level. si is the index of segment/syllable out of all since reset*/
     async function call_backed(seg_index, seg_label, seg_time, extracted_features)
     {
-        console.log(seg_index, seg_label, seg_time, extracted_features);
+        console.log(seg_index, seg_label, seg_time);
+        //console.log(extracted_features);
         return;
     }
     

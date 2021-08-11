@@ -1,18 +1,23 @@
 # formantanalyzer.js
 
-[![Inline docs](http://inch-ci.org/github/tabahi/formantanalyzer.js.svg?branch=main&style=shields)](http://inch-ci.org/github/tabahi/formantanalyzer.js)
+![npm](https://img.shields.io/npm/v/formantanalyzer?style=plastic)
+![GitHub branch checks state](https://img.shields.io/github/checks-status/tabahi/formantanalyzer.js/main)
+![NPM](https://img.shields.io/npm/l/formantanalyzer?style=plastic)
+[![Inline docs](http://inch-ci.org/github/tabahi/formantanalyzer.js.svg?branch=main)](http://inch-ci.org/github/tabahi/formantanalyzer.js)
+
 
 A JS [Web API](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) based spectrum analyzer for speech and music analysis. It can be used for labeling or feature extraction.
 
+![Preview](./assets/preview.png "Preview")
+
 ## Demo
 
-Bare minimum starter file: [tabahi.github.io/WebSpeechAnalyzer/simple.html](https://tabahi.github.io/WebSpeechAnalyzer/simple.html)
+Bare minimum starter file: [tabahi.github.io/formantanalyzer.js](https://tabahi.github.io/formantanalyzer.js/)
 
-Mel spectrum demo at: [tabahi.github.io/WebSpeechAnalyzer/?mode=2](https://tabahi.github.io/WebSpeechAnalyzer/?mode=2&p=samples/Haendel_Lascia_chi_o_pianga.mp4 )
+### Related projects:
 
-Try speech analyzer demo at: [tabahi.github.io/WebSpeechAnalyzer/?dev=1](https://tabahi.github.io/WebSpeechAnalyzer/?dev=1)
-
-Try emotion analyzer demo at: [tabahi.github.io/WebSpeechAnalyzer/?type=cats&label=emotion](https://tabahi.github.io/WebSpeechAnalyzer/?type=cats&label=emotion)
+- [Web Speech Analyzer](https://tabahi.github.io/WebSpeechAnalyzer/?dev=1)
+- [Speech Emotion Analyzer](https://tabahi.github.io/WebSpeechAnalyzer/?type=cats&label=emotion)
 
 
 ## Installation
@@ -21,7 +26,7 @@ Try emotion analyzer demo at: [tabahi.github.io/WebSpeechAnalyzer/?type=cats&lab
 
 Load the javascript module as
 ```html
-<script src="https://unpkg.com/formantanalyzer@1.1.6/index.js"></script>
+<script src="https://unpkg.com/formantanalyzer@1.1.8/index.js"></script>
 ```
 Then use the entry point `FormantAnalyzer` to use the imported javascript library.
 
@@ -50,7 +55,7 @@ If you are creating a webpack project from scratch by just using JS files from `
 
 ## Usage
 
-First, configure the fomant analyzer. Pass the `#SpectrumCanvas` element if plot is enabled. Pass `null` if no need for plot. See `simple.html` for a simple example.
+First, configure the fomant analyzer. Pass the `#SpectrumCanvas` element if plot is enabled. Pass `null` if no need for plot. See 'index.html' for a simple example.
 
 HTML:
 ```html
@@ -61,7 +66,7 @@ HTML:
 In javascript:
 
 ```javascript
-/*Using <script src="https://unpkg.com/formantanalyzer@1.1.6/index.js"></script>
+/*Using <script src="https://unpkg.com/formantanalyzer@1.1.8/index.js"></script>
 Can also import in webpack as:
 const FormantAnalyzer = require('formantanalyzer');
 */
@@ -92,7 +97,7 @@ function Configure_FormantAnalyzer()
 ```
 
 
-Initialize an Audio Element, or local audio file binary element, or `null` if using the mic stream. Then pass it to `LaunchAudioNodes` with suitable parameters. See `simple.html` for examples for local audio file and mic streaming.
+Initialize an Audio Element, or local audio file binary element, or `null` if using the mic stream. Then pass it to `LaunchAudioNodes` with suitable parameters. See 'index.html' for examples for local audio file and mic streaming.
 
 ```javascript
 
@@ -135,9 +140,9 @@ If you want an abrupt stop, then call the `FormantAnalyzer.stop_playing("no reas
 
 `source_obj` (object):
 Source audio object.
-- If `context_source==1` (playing from a local file) then pass a binary of file. Get binary from `FileReader` as: `FileReader.onload (e)=>(binary = e.target.result)`. See [`simple.html`](https://github.com/tabahi/WebSpeechAnalyzer/blob/51dac532bb1909439a90ac7552c199adce34f86f/simple.html#L218).
+- If `context_source==1` (playing from a local file) then pass a binary of file. Get binary from `FileReader` as: `FileReader.onload (e)=>(binary = e.target.result)`. See [`index.html`](https://github.com/tabahi/formantanalyzer.js/blob/main/index.html#L236).
 - If `context_source==2` (playing from a web address) then pass an `Audio` object.
-- If `context_source==3` (playing from mic Pass `null`). See [`index.html`](https://github.com/tabahi/WebSpeechAnalyzer/blob/51dac532bb1909439a90ac7552c199adce34f86f/simple.html#L142).
+- If `context_source==3` (playing from mic Pass `null`). See [`index.html`](https://github.com/tabahi/formantanalyzer.js/blob/main/index.html#L144).
 
 `callback`:
 It is the callback function to be called after each segment ends. It should accept 4 variables; `segment_index`, `segment_time_array`, `segment_labels_array`, `segment_features_array`. Callback is called asynchronously, so there might be a latency between audio play and it's respective callback, that's why it's important to send the labels to async segmentor function.
@@ -235,7 +240,8 @@ Available `output_level` options:
 
 Different `features` are returned to the `callback(seg_index, seg_label, seg_time, features)` at different output levels. The shape of `seg_time` also differs from `(2)` to `(syllable, 2)` for segment vs syllable. The shape of `features` array at each level is as follows:
 
-- `Bar` and `Spectrum` levels return a 1D array of raw FFT or Mel bins (depending on the `spec_type`) at the interval of each window step (~25 ms). The only difference is that `Spectrum` level keeps a history of bins for plotting the spectrum. _(Currently, callback is disabled at this level, only use it to view plots)_
+- `Bar` and `Spectrum` levels return a 1D array of raw FFT or Mel bins (depending on the `spec_type`) at the interval of each window step (~25 ms). The only difference is that `Spectrum` level keeps a history of bins for plotting the spectrum. `Spectrum` level returns callback with a 2D array of size `plot_len` x `N_bins` after each `min_seg_length` milliseconds. `Bar` returns an array of `1` x `N_bins`of the latest step.
+
 - `Segments` level returns a 2D array of shape `(step, bins)` of FFT or Mel-bins for each segment. The 1st axis is along the window steps, 2nd axis is along the FFT or Mel bins at each step. Each segment is separated by pauses in speech.
 - `Segment Formants` returns an array of shape `(steps, 9)`. The 9 features include frequency, energy and bandwidth of 3 most prominent formants at that particular window step. Indices `[0,1,2]` are the frequency, energy and bandwidth of the lowest frequency formant.
 - `Syllable Formants` returns the same array of shape `(steps, 9)` as `Segment Formants` but in this case the division and the length (total number of steps) is much shorter because syllables are separated by even minor pauses and other sudden shifts in formant frequency and energy.
@@ -246,4 +252,4 @@ Different `features` are returned to the `callback(seg_index, seg_label, seg_tim
 
 Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file, or per syllable) that's why they can be used as input for an ML classifier. At level `11,13`, the plot is the same as level `10`, but the different types of extracted features are returned to the callback function.
 
-
+`auto_noise_gate: true` automatically sets the speech to silence thresholds to detect voiced segments. To use manual thresholds, set it to `false` and set manual values for `voiced_min_dB` and `voiced_max_dB`.

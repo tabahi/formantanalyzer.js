@@ -31,7 +31,7 @@ var max_history_len = 0;
 var old_maxes_sum = 0;
 var old_maxes_n = 0;
 
-var callback_func; //callback_after_elements_extraction
+var callback_func = null; //callback_after_elements_extraction
 let test_mode = true;
 const break_at_limits = false;
 
@@ -536,7 +536,7 @@ function handle_callback()
     //Segment index is also passed so that labels can be displayed on the plot accordingly.
     //Filename is passed so that if the main node has moved to next file, this previous file still retains the filename of current segment in order to extract its label.
     
-    if(test_mode) return true;
+    if((test_mode) || (callback_func==null)) return true;
     else if(s_set.spec_bands>0)
     {
         if(s_set.process_level == 11)    //syllable level features extraction for whole clip from 'utt_mod.get_utterance_features'
@@ -549,7 +549,7 @@ function handle_callback()
                     s_set.callbacks_processed = syllables.length;
                     const syls_ts = get_clip_timestamps();
                     const utt_features = utt_mod.get_utterance_features(segments_ci, syllables);
-                    if(callback_func) callback_func(0, s_set.current_label, syls_ts, utt_features);
+                    callback_func(0, s_set.current_label, syls_ts, utt_features);
                 }
             }
         }
@@ -565,7 +565,7 @@ function handle_callback()
                     
                     if(syllables_ft[cl].length > 0)
                     {
-                        if(callback_func) callback_func(cl, s_set.current_label, get_syls_timestamps(cl), syllables_ft[cl]);
+                        callback_func(cl, s_set.current_label, get_syls_timestamps(cl), syllables_ft[cl]);
                     }
                 }
             }
@@ -582,7 +582,7 @@ function handle_callback()
                     
                     if(syllables[cl][1].length > 0)
                     {
-                        if(callback_func) callback_func(cl, s_set.current_label, get_syls_timestamps(cl), syllables[cl][1]);
+                        callback_func(cl, s_set.current_label, get_syls_timestamps(cl), syllables[cl][1]);
                     }
                 }
             }
@@ -600,7 +600,7 @@ function handle_callback()
                     
                     if(formants_ft[cl].length > 0)          //only process segments with 2 or more scattered formants
                     {
-                        if(callback_func) callback_func(cl, s_set.current_label, get_seg_timestamps(cl), formants_ft[cl]);
+                        callback_func(cl, s_set.current_label, get_seg_timestamps(cl), formants_ft[cl]);
                     }
                 }
             }
@@ -616,8 +616,7 @@ function handle_callback()
                     let cl = s_set.callbacks_processed-1;
                     if(segments_fm[cl].length > 0)          //only process segments with 2 or more scattered formants
                     {
-                        if(callback_func) callback_func(cl, s_set.current_label, get_seg_timestamps(cl), segments_fm[cl]);
-                        else console.warn('callback_func is not set');
+                        callback_func(cl, s_set.current_label, get_seg_timestamps(cl), segments_fm[cl]);
                     }
                 }
             }
@@ -630,32 +629,27 @@ function handle_callback()
                 let cl = s_set.callbacks_processed-1;
                 if(segments_raw[cl].length > 0)          //only process segments with 2 or more scattered formants
                 {
-                    if(callback_func)
-                        callback_func(cl, s_set.current_label, segments_raw[cl]);
-                    else
-                        console.log('callback_func is not set');
+                    callback_func(cl, s_set.current_label, get_seg_timestamps(cl), segments_raw[cl]);
                 }
             }
         }
-        /*
-        Need to change condition above: (s_set.callbacks_processed < segments_fm.length), because length will reduce after splice
-        let len20 = segments_raw.length;
-        if((segments_ci.length!=len20)||(segments_labels.length!=len20) ||((s_set.process_level >= 4) && (segments_fm.length!=len20)) || ((s_set.process_level >= 5)&&(phoneme_ft.length!=len20)) || ((s_set.process_level >= 5) && (phoneme_ci.length!=len20))  )
+        else if(s_set.process_level == 2)     //raw spectrum
         {
-            console.error("Segments arrays count mismatch ");
+            if((s_set.current_frame - s_set.callbacks_processed) > s_set.seg_min_frames)
+            {
+                callback_func(s_set.current_frame, s_set.current_label, [s_set.current_frame*s_set.window_step, s_set.plot_len*s_set.window_step], spec_hist);
+                s_set.callbacks_processed = s_set.current_frame;
+            }
         }
-        else if((s_set.process_level >= 3) && (len20 > MAX_SEGS))
+        else    //raw bars
         {
-            s_set.callbacks_processed -= len20 - MAX_SEGS;
-            //total 6 buffers\
-            if(s_set.process_level >= 5) {phoneme_ft.splice(0, len20 - MAX_SEGS); phoneme_ci.splice(0, len20 - MAX_SEGS);}
-            if(s_set.process_level >= 4) formants_ft.splice(0, len20 - MAX_SEGS);
+            if(s_set.current_frame > s_set.callbacks_processed)
+            {
+                s_set.callbacks_processed = s_set.current_frame;
+                callback_func(s_set.current_frame, s_set.current_label, [s_set.current_frame*s_set.window_step, s_set.window_step], spec_hist);
+            }
+        }
 
-            segments_fm.splice(0, len20 - MAX_SEGS);
-            segments_raw.splice(0, len20 - MAX_SEGS);
-            segments_ci.splice(0, len20 - MAX_SEGS);
-            segments_labels.splice(0, len20 - MAX_SEGS);
-        }*/
     }
     else
         console.warn('s_set.spec_bands is not set yet.')
@@ -677,16 +671,26 @@ export function spectrum_push(new_bins, frame_n) /* AudioNodes.js forwards the b
         if(s_set.process_level<=2)
         {
             spec_hist.push(new_bins);   //this is the most raw buffer used only for plotting
-            if(s_set.process_level<=1) spec_hist.splice(0,spec_hist.length-1);
-            else if(spec_hist.length > s_set.plot_len) spec_hist.splice(0,1);
+            
+            let this_max = stats.arrayMax(new_bins);  //low level amplitude control
 
+            if(s_set.process_level<=1)
+            {
+                spec_hist.splice(0,spec_hist.length-1);
+                if(this_max > local_minimum) handle_callback();
+            }
+            else if(spec_hist.length > s_set.plot_len)
+            {
+                spec_hist.splice(0,1);
+                if(this_max > local_minimum) handle_callback();
+            }
             if(s_set.auto_noise_gate)
             {
-                let this_max = stats.arrayMax(new_bins);  //low level amplitude control
                 if(this_max > context_maximum) { context_maximum = this_max; max_history_len = 0; last_real_high=this_max;}
                 else if((max_history_len>s_set.seg_limit_1) && (context_maximum>last_real_high/4)) {context_maximum *= 0.99;}
                 else max_history_len++;
             }
+            
         }
         else
         {

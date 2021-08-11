@@ -1,10 +1,12 @@
 {
   "name": "formantanalyzer",
-  "version": "1.1.6",
-  "description": "A WebAPI based speech analysis library. Specifically designed to extract formants from voiced segments.",
+  "version": "1.1.71",
+  "description": "Extract formant features such as frequency, power, energy, and bandwidth of formants at syllable or word level from audio sources in a web browser using WebAudio API.",
   "main": "AudioLauncher.js",
   "private": false,
-  "dependencies": {"numeric": "^1.2.6"},
+  "dependencies": {
+    "numeric": "^1.2.6"
+  },
   "devDependencies": {
     "clean-webpack-plugin": "^3.0.0",
     "html-webpack-plugin": "^4.3.0",
@@ -30,5 +32,5 @@
   "bugs": {
     "url": "https://github.com/tabahi/formantanalyzer.js/issues"
   },
-  "license": "ISC"
+  "license": "Apache 2"
 }
