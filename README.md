@@ -240,7 +240,9 @@ Available `output_level` options:
 
 Different `features` are returned to the `callback(seg_index, seg_label, seg_time, features)` at different output levels. The shape of `seg_time` also differs from `(2)` to `(syllable, 2)` for segment vs syllable. The shape of `features` array at each level is as follows:
 
-- `Bar` and `Spectrum` levels return a 1D array of raw FFT or Mel bins (depending on the `spec_type`) at the interval of each window step (~25 ms). The only difference is that `Spectrum` level keeps a history of bins for plotting the spectrum. `Spectrum` level returns callback with a 2D array of size `plot_len` x `N_bins` after each `min_seg_length` milliseconds. `Bar` returns an array of `1` x `N_bins`of the latest step.
+- `Bar` levels return a 2D array of shape (1 x bins) of raw FFT or Mel bins, depending on the `spec_type`, for each voiced window step (~15 ms).
+
+- `Spectrum` level keeps a history of bins for plotting the spectrum and returns a 2D array of size `plot_len` x `N_bins` after each `min_seg_length` milliseconds. The spectrum includes silent frames, but the callback function is called only when there are at least `min_seg_length` worth of new voiced frames. Callback is not called for smaller audio clips that are shorter than spectrum length, set a smaller value of `plot_len` when using  audio clips of duration shorter than frames of `plot_len` (200 frames x 15 ms step = 3 seconds).
 
 - `Segments` level returns a 2D array of shape `(step, bins)` of FFT or Mel-bins for each segment. The 1st axis is along the window steps, 2nd axis is along the FFT or Mel bins at each step. Each segment is separated by pauses in speech.
 - `Segment Formants` returns an array of shape `(steps, 9)`. The 9 features include frequency, energy and bandwidth of 3 most prominent formants at that particular window step. Indices `[0,1,2]` are the frequency, energy and bandwidth of the lowest frequency formant.
@@ -255,10 +257,13 @@ Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file
 `auto_noise_gate: true` automatically sets the speech to silence thresholds to detect voiced segments. To use manual thresholds, set it to `false` and set manual values for `voiced_min_dB` and `voiced_max_dB`.
 
 ## `StopAudioNodes()`
+
 To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" is only for notification and debugging purposes, it can be empty as "".
 
 ## `set_predicted_label_for_segment()`
-To add a predicted text label on segment plots, use `FormantAnalyzer.set_predicted_label_for_segment(seg_index, label_index, predicted_label)`, 
+
+To add a predicted text labels on segment plots, use `FormantAnalyzer.set_predicted_label_for_segment(seg_index, label_index, predicted_label)`
+
 - where `seg_index` is the same as returned to the callback function,
 
 - `label_index` is the index in array `file_labels` that you want to set (e.g. if `file_labels=['filename.wav', 'Angry']`, then use `label_index=1` to set the predicted label in place of true label 'Angry'). Currently, plot only shows the label at index 1.
