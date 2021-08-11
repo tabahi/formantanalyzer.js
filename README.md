@@ -255,7 +255,7 @@ Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file
 `auto_noise_gate: true` automatically sets the speech to silence thresholds to detect voiced segments. To use manual thresholds, set it to `false` and set manual values for `voiced_min_dB` and `voiced_max_dB`.
 
 ## `StopAudioNodes()`
-To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" only is for notification and debugging purposes, it can be empty as "".
+To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" is only for notification and debugging purposes, it can be empty as "".
 
 ## `set_predicted_label_for_segment()`
 To add a predicted text label on segment plots, use `FormantAnalyzer.set_predicted_label_for_segment(seg_index, label_index, predicted_label)`, 
