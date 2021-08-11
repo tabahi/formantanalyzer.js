@@ -150,7 +150,7 @@ It is the callback function to be called after each segment ends. It should acce
 `file_labels` (Array):
 It is an array of labels for currently playing file. It is returned as it is to the callback function.
 It is used to avoid the label mismatch during slow async processing in case if a new file is playing, but the callback sends the output of the previous one.
-Sometimes callback is called with a delay of 2 seconds, so it helps to keep track which file was playing 2 seconds ago.
+Sometimes callback is called with a delay of 2 seconds, so it helps to keep track which file was playing 2 seconds ago. e.g., `file_labels=['filename.wav', 'Angry']`
 
 `offline_mode` (boolean):
 If true then the locally loaded files will be played silently in an offline buffer.
@@ -253,3 +253,14 @@ Different `features` are returned to the `callback(seg_index, seg_label, seg_tim
 Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file, or per syllable) that's why they can be used as input for an ML classifier. At level `11,13`, the plot is the same as level `10`, but the different types of extracted features are returned to the callback function.
 
 `auto_noise_gate: true` automatically sets the speech to silence thresholds to detect voiced segments. To use manual thresholds, set it to `false` and set manual values for `voiced_min_dB` and `voiced_max_dB`.
+
+## `StopAudioNodes()`
+To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" only is for notification and debugging purposes, it can be empty as "".
+
+## `set_predicted_label_for_segment()`
+To add a predicted text label on segment plots, use `FormantAnalyzer.set_predicted_label_for_segment(seg_index, label_index, predicted_label)`, 
+- where `seg_index` is the same as returned to the callback function,
+
+- `label_index` is the index in array `file_labels` that you want to set (e.g. if `file_labels=['filename.wav', 'Angry']`, then use `label_index=1` to set the predicted label in place of true label 'Angry'). Currently, plot only shows the label at index 1.
+
+- `predicted_label` is the predicted label and it's probability to display on the segment plot. e.g., `predicted_label=["Sad", 0.85]`.
