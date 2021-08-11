@@ -8,7 +8,7 @@
 
 A JS [Web API](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) based spectrum analyzer for speech and music analysis. It can be used for labeling or feature extraction.
 
-![Preview](./assets/preview.png "Preview")
+![Preview](https://raw.githubusercontent.com/tabahi/formantanalyzer.js/main/assets/preview.png "Preview")
 
 ## Demo
 

@@ -1,6 +1,6 @@
 {
   "name": "formantanalyzer",
-  "version": "1.1.71",
+  "version": "1.1.8",
   "description": "Extract formant features such as frequency, power, energy, and bandwidth of formants at syllable or word level from audio sources in a web browser using WebAudio API.",
   "main": "AudioLauncher.js",
   "private": false,
