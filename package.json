@@ -26,9 +26,9 @@
     "audio-processing"
   ],
   "author": "Abdul Rehman (Tabahi)",
-  "homepage": "https://github.com/tabahi/WebSpeechAnalyzer",
+  "homepage": "https://github.com/tabahi/formantanalyzer.js",
   "bugs": {
-    "url": "https://github.com/tabahi/WebSpeechAnalyzer/issues"
+    "url": "https://github.com/tabahi/formantanalyzer.js/issues"
   },
   "license": "ISC"
 }

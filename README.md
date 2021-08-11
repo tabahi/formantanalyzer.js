@@ -1,5 +1,7 @@
 # formantanalyzer.js
 
+[![Inline docs](http://inch-ci.org/github/tabahi/formantanalyzer.js.svg?branch=main&style=shields)](http://inch-ci.org/github/tabahi/formantanalyzer.js)
+
 A JS [Web API](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) based spectrum analyzer for speech and music analysis. It can be used for labeling or feature extraction.
 
 ## Demo
@@ -57,6 +59,7 @@ HTML:
 </div>
 ```
 In javascript:
+
 ```javascript
 /*Using <script src="https://unpkg.com/formantanalyzer@1.1.6/index.js"></script>
 Can also import in webpack as:
