@@ -260,6 +260,9 @@ Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file
 
 To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" is only for notification and debugging purposes, it can be empty as "".
 
+
+
+
 ## `set_predicted_label_for_segment()`
 
 To add a predicted text labels on segment plots, use `FormantAnalyzer.set_predicted_label_for_segment(seg_index, label_index, predicted_label)`
@@ -269,3 +272,17 @@ To add a predicted text labels on segment plots, use `FormantAnalyzer.set_predic
 - `label_index` is the index in array `file_labels` that you want to set (e.g. if `file_labels=['filename.wav', 'Angry']`, then use `label_index=1` to set the predicted label in place of true label 'Angry'). Currently, plot only shows the label at index 1.
 
 - `predicted_label` is the predicted label and it's probability to display on the segment plot. e.g., `predicted_label=["Sad", 0.85]`.
+
+
+### Cite
+
+```tex
+@inproceedings{rehman2021syllable,
+  title={Syllable Level Speech Emotion Recognition Based on Formant Attention},
+  author={Rehman, Abdul and Liu, Zhen-Tao and Xu, Jin-Meng},
+  booktitle={CAAI International Conference on Artificial Intelligence},
+  pages={261--272},
+  year={2021},
+  organization={Springer}
+
+```
