@@ -3,7 +3,6 @@
 ![npm](https://img.shields.io/npm/v/formantanalyzer?style=plastic)
 ![GitHub branch checks state](https://img.shields.io/github/checks-status/tabahi/formantanalyzer.js/main)
 ![NPM](https://img.shields.io/npm/l/formantanalyzer?style=plastic)
-[![Inline docs](http://inch-ci.org/github/tabahi/formantanalyzer.js.svg?branch=main)](http://inch-ci.org/github/tabahi/formantanalyzer.js)
 
 
 A JS [Web API](https://developer.mozilla.org/en-US/docs/Web/API/AudioContext) based spectrum analyzer for speech and music analysis. It can be used for labeling or feature extraction.
