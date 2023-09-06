@@ -103,7 +103,7 @@
     function Configure_FormantAnalyzer()
     {
         const BOX_HEIGHT = 300;
-        const BOX_WIDTH = window.screen.availWidth - 50; //reset the size of canvas element using the screen width
+        const BOX_WIDTH = window.innerWidth - 50; //reset the size of canvas element using the screen width
         document.getElementById('SpectrumCanvas').width = BOX_WIDTH;
         document.getElementById('SpectrumCanvas').height = BOX_HEIGHT;
         
