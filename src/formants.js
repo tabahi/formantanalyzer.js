@@ -157,37 +157,36 @@ export function formant_features(formants, context_maximum, local_minimum)
                 //fm_i_counts[fr] = fm_i_counts[fr] * 10 / seg_size;
             }
         }
+       
         let buff = [];
-        buff.push(seg_size);
-        buff.push(Math.sqrt(seg_size));
-        buff.push(fm_voiced_energy/fm_noise_residue);
-        buff.push(Math.log10(context_maximum));
-        buff.push(local_minimum);
+       buff.push(seg_size);                      // x0, segment size
+       buff.push(Math.sqrt(seg_size));           // x1 , square root of segment size is better as a feature
+       buff.push(fm_voiced_energy/fm_noise_residue); // x2, SNR, voiced/non-voiced 
+       buff.push(Math.log10(context_maximum));   // x3, hightest amplitude detected for the context in db. Most other features are already normalized based on this maximum.
+       buff.push(local_minimum);                 // x4, local minimum for the amplitude
 
-        for (let fr = 0; fr < max_fm; fr++) 
-        {
-            //console.log(freq_mean[fr] + '\t' + freq_std[fr] + '\t' + span_mean[fr] + '\t' + fm_i_counts[fr] + '\t' + slp_ups[fr] + '\t' + slp_dns[fr]);
-            buff.push(freq_mean[fr]);
-            buff.push(freq_std[fr]);
-            buff.push(ener_mean[fr]);
-            buff.push(ener_std[fr]);
-            buff.push(ener_rate[fr]);
-            buff.push(ener_voice[fr]);
-            buff.push(span_mean[fr]);
-            buff.push(fm_avg_lens[fr]);
-            buff.push(fm_i_counts[fr]);
-            buff.push(slp_ups[fr]);
-            buff.push(slp_dns[fr]);
+       for (let fr = 0; fr < max_fm; fr++) 
+       {
+           //console.log(freq_mean[fr] + '\t' + freq_std[fr] + '\t' + span_mean[fr] + '\t' + fm_i_counts[fr] + '\t' + slp_ups[fr] + '\t' + slp_dns[fr]);
+           buff.push(freq_mean[fr]);             // x5:f0, x21:f1, x37:f2  , formant frequency mean
+           buff.push(freq_std[fr]);              // x6:f0, x22:f1, x38:f2  , formant frequency standard deviation
+           buff.push(ener_mean[fr]);             // x7:f0, x23:f1, x39:f2  , formant energy mean
+           buff.push(ener_std[fr]);              // x8:f0, x24:f1, x40:f2  , formant energy standard deviation
+           buff.push(ener_rate[fr]);             // x9:f0, x25:f1, x41:f2  , formant energy rate
+           buff.push(ener_voice[fr]);            // x10:f0, x26:f1, x42:f2 , formant voiced energy
+           buff.push(span_mean[fr]);             // x11:f0, x27:f1, x43:f2 , formant span mean
+           buff.push(fm_avg_lens[fr]);           // x12:f0, x28:f1, x44:f2 , average formant length
+           buff.push(fm_i_counts[fr]);           // x13:f0, x29:f1, x45:f2 , formant instance counts
+           buff.push(slp_ups[fr]);               // x14:f0, x30:f1, x46:f2 , formant slope ups
+           buff.push(slp_dns[fr]);               // x15:f0, x31:f1, x47:f2 , formant slope downs
 
-            buff.push(peaks_count[fr]); //stress A
-            buff.push(peaks_mean[fr]);  //stress B
-            buff.push(peaks_std[fr]);   //stress C
-            buff.push(peaks_relh[fr]);  //stress D
+           buff.push(peaks_count[fr]);           // x16:f0, x32:f1, x48:f2 , formant peaks count
+           buff.push(peaks_mean[fr]);            // x17:f0, x33:f1, x49:f2 , formant peaks mean
+           buff.push(peaks_std[fr]);             // x18:f0, x34:f1, x50:f2 , formant peaks standard deviation
+           buff.push(peaks_relh[fr]);            // x19:f0, x35:f1, x51:f2 , formant peaks relative height, better as a feature
 
-            
-            buff.push(fm_avg_lens[fr]*100/seg_size);
-        }
-        
+           buff.push(fm_avg_lens[fr]*100/seg_size); // x20:f0, x36:f1, x52:f2 , normalized average formant length
+       }
        
         return buff;
     }
