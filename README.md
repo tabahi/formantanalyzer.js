@@ -255,6 +255,37 @@ Levels `5,11,12,13` have fixed output vector sizes (either per segment, per file
 
 `auto_noise_gate: true` automatically sets the speech to silence thresholds to detect voiced segments. To use manual thresholds, set it to `false` and set manual values for `voiced_min_dB` and `voiced_max_dB`.
 
+
+
+
+### Statistical Feautures
+
+The features for each syllable at output level 5 and 13 are designed for easy machine learning and can be downloaed as CSV or JSON. See the code for these features [here](https://github.com/tabahi/formantanalyzer.js/blob/1ca29207ee26340067d2f588be6b2df41e8964a3/src/formants.js#L162)
+
+| Index | Feature | Description |
+|--------|----------|-------------|
+| x0 | Segment Size | Total length of the segment |
+| x1 | Sqrt Segment Size | Square root of segment length |
+| x2 | SNR | Signal-to-noise ratio (voiced/non-voiced) |
+| x3 | Context Maximum | Log of highest amplitude in context (dB) |
+| x4 | Local Minimum | Local minimum amplitude |
+| x5/x21/x37 | Frequency Mean | Mean frequency for F0/F1/F2 on the Mel-filter's scale |
+| x6/x22/x38 | Frequency StdDev | Frequency standard deviation |
+| x7/x23/x39 | Energy Mean | Mean energy level |
+| x8/x24/x40 | Energy StdDev | Energy standard deviation |
+| x9/x25/x41 | Energy Rate | Energy spread over segment |
+| x10/x26/x42 | Voiced Energy | Energy in voiced parts |
+| x11/x27/x43 | Span Mean | Mean formant span |
+| x12/x28/x44 | Formant Length | Average formant duration |
+| x13/x29/x45 | Instance Count | Number of formant instances |
+| x14/x30/x46 | Slope Ups | Upward frequency transitions |
+| x15/x31/x47 | Slope Downs | Downward frequency transitions |
+| x16/x32/x48 | Peak Count | Number of energy peaks |
+| x17/x33/x49 | Peak Mean | Mean of energy peaks |
+| x18/x34/x50 | Peak StdDev | Standard deviation of peaks |
+| x19/x35/x51 | Relative Height | Peak height vs average energy |
+| x20/x36/x52 | Normalized Length | Formant length relative to segment |
+
 ## `StopAudioNodes()`
 
 To stop the playback before it's finished call `FormantAnalyzer.StopAudioNodes("reason")`. The "reason" is only for notification and debugging purposes, it can be empty as "".
